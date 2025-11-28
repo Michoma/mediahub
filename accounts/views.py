@@ -19,8 +19,10 @@ def register_view(request):
         if form.is_valid():
             user = form.save()  ## submit our user to db
             login(request,user)  ## calls the login action
-            messages.succes(request,f'Welcome {user.username}! Your account has been successfully created!')
+            messages.success(request,f'Welcome {user.username}! Your account has been successfully created!')
             return redirect('media_assets:dashboard')
+        else:
+            messages.error(request, 'Please correct the errors below')
     else:
         form = UserRegistrationForm() #dafault http method here is GET
     return render(request, 'accounts/register.html',{'form' : form})
@@ -38,12 +40,16 @@ def login_view(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             #django method to authenthicate and login the user
-            user = authenticate(username,password) # queries db looking for the user with mentioned credentials
+            user = authenticate(request=request, username=username, password=password) # queries db looking for the user with mentioned credentials
             # if user not found in db
             if user is not None:
                 login(request,user)
                 messages.success(request, f'Welcome back {username}')
-                return redirect('media_assets : dashboard')
+                return redirect('media_assets:dashboard')
+            else:
+                messages.error(request, 'Invalid username or password')
+        else:
+            messages.error(request, 'Enter valid details')
        
     else:
         form = UserLoginForm() #dafault http method here is GET
@@ -63,7 +69,7 @@ def profile_view(request):
     if request.method == 'POST':
         form = UserProfileForm(request.POST,request.FILES, instance=request.user)
         messages.success(request,f"Profile saved successfully")
-        return redirect('account:profile')
+        return redirect('accounts:profile')
     else:
         form = UserProfileForm(instance=request.user)
 
@@ -73,10 +79,10 @@ class CustomPasswordResetView(PasswordResetView):
     # interface change
     template_name = 'accounts/password_reset.html'
     email_template_name = 'accounts/password_reset_email.html'
-    success_url = reverse_lazy('accounts:password_reset_complete') # this will launch the confirm view
+    success_url = reverse_lazy('accounts:password_reset-done') # this will launch the done view
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     # interface change
     template_name= 'accounts/password_reset_confirm.html'
-    succes_url = reverse_lazy('accounts:password_reset_complete') # this will launch when password is updated
+    success_url = reverse_lazy('accounts:password_reset_complete') # this will launch when password is updated
 
