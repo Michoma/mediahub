@@ -30,4 +30,4 @@ urlpatterns = [
 ## special url path for loading our assets on development 
 if settings.DEBUG:
     urlpatterns +=  static(settings.MEDIA_URL, document_root=
-                           settings.MEDIA_ROOT)
+                           settings.MEDIA_ROOT)            

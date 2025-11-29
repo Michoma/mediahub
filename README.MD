@@ -50,6 +50,12 @@ custompasswordresetview , custompasswordresetconfirmview - views.py
    - Linking to global stylesheet / style lib. (bootstrap)
    - Link to global js files 
 
+### Configuring our environmental variables
+1. Create a .env file for development purposes -  store your info as a reference
+
+
+
+### MPESA INTERGRATI
 
 
 

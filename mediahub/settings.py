@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts',
     'media_assets',
     'cloudinary',
+    'mediampesa',
 ]
 # register our custom model
 AUTH_USER_MODEL = 'accounts.User'
@@ -51,12 +52,14 @@ LOGIN_REDIRECT_URL = 'media_assets:dashboard'
 LOGOUT_REDIRECT_URL = 'accounts:login'
 
 import cloudinary
+from decouple import config
 CLOUDINARY_CONFIGS = {
-    'cloud_name' : '',
-    'api_key' : '',
-    'api_secret':'',
+    'cloud_name' : config('CLOUDINARY_CLOUD_NAME', default=''),
+    'api_key' : config('CLOUDINARY_API_KEY', default=''),
+    'api_secret':config('CLOUDINARY_API_SECRET', default=''),
 }
-cloudinary.config(**CLOUDINARY_CONFIGS)
+if CLOUDINARY_CONFIGS['cloud_name'] :
+    cloudinary.config(**CLOUDINARY_CONFIGS)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

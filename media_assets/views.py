@@ -88,6 +88,48 @@ def media_detail_view(request, pk):
         'media': media
     })
 
+### edit and delete views to be added here later ###
+@login_required
+def edit_media_view(request, pk):
+    ''' view to handle editing of a media asset by its owner
+    '''
+    media = get_object_or_404(MediaAsset, pk=pk)
+    if not media.can_edit(request.user):
+        messages.error(request, 'You can not edit this file.')
+        return redirect('media_assets:dashboard')
+
+    if request.method == 'POST':
+        form = MediaAssetForm(request.POST, request.FILES, instance=media)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Media asset updated successfully!')
+            return redirect('media_assets:media_detail', pk=pk)
+          
+    else:
+        form = MediaAssetForm(instance=media)
+
+    return render(request, 'media_assets/edit_media.html',{
+        'form': form,
+        'media': media
+    })
+
+@login_required
+def delete_media_view(request, pk):
+    ''' view to handle deletion of a media asset by its owner
+    '''
+    media = get_object_or_404(MediaAsset, pk=pk)
+    if not media.can_edit(request.user):
+        messages.error(request, 'You can not delete this file.')
+        return redirect('media_assets:dashboard')
+
+    if request.method == 'POST':
+        media.delete()
+        messages.success(request, 'Media asset deleted successfully!')
+        return redirect('media_assets:my_media')
+
+    return render(request, 'media_assets/delete_media.html',{
+        'media': media
+    })
 
 
 

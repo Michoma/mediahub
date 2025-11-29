@@ -51,7 +51,7 @@ def login_view(request):
         else:
             messages.error(request, 'Enter valid details')
        
-    else:
+    else: 
         form = UserLoginForm() #dafault http method here is GET
     return render(request, 'accounts/login.html',{'form' : form})
 
