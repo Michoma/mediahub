@@ -77,7 +77,7 @@ def media_detail_view(request, pk):
     # increment views count
     media.views_count += 1 
     media.save(update_fields=['views_count'])
-    if not media.is_public and media.uploaded_by != request.user and not request.user.is_teacher() and not request.user.is_superuser:
+    if not media.is_public and media.uploaded_by != request.user and not request.user.is_teacher and not request.user.is_superuser:
         messages.error(request, 'You do not have permission to view this media asset.')
         return redirect('media_assets:dashboard')
 

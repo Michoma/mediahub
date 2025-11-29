@@ -29,7 +29,7 @@ class MediaAsset(models.Model):
     # edit rights
     def can_edit(self, user):
         """ Check if the given user can update this media asset """
-        return user == self.uploaded_by or user.is_teacher() or user.is_superuser  # allow if owner or teacher or admin
+        return user == self.uploaded_by or user.is_teacher or user.is_superuser  # allow if owner or teacher or admin
 
     # string representation
     def __str__(self):  # string representation of the object

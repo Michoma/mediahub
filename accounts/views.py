@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import login , logout , authenticate # django inbuilt operation that return true or false
 from django.contrib.auth.decorators import login_required# returns true or false -> gives permission to usage of view actions based off user login activities 
 # decorator is when function return another function
@@ -33,7 +33,8 @@ def login_view(request):
         return redirect('media_assets:dashboard')
 
     if request.method == 'POST': # user wants to register
-        form = UserLoginForm(request.POST)
+        # AuthenticationForm (and subclasses) expect the request as the first arg
+        form = UserLoginForm(request, data=request.POST)
         #if user has filled all required inputs
         if form.is_valid():
             # pick up entries for the username and password
@@ -49,10 +50,13 @@ def login_view(request):
             else:
                 messages.error(request, 'Invalid username or password')
         else:
-            messages.error(request, 'Enter valid details')
+            # Show actual form validation errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{error}')
        
     else: 
-        form = UserLoginForm() #dafault http method here is GET
+        form = UserLoginForm(request) #dafault http method here is GET
     return render(request, 'accounts/login.html',{'form' : form})
 
 ## logout -> check if our user is logged in - @login_required

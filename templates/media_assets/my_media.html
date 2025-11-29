@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}My Media - MediaHub{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>My Uploads</h2>
+  <a href="{% url 'media_assets:upload_media' %}" class="btn btn-primary">Upload New</a>
+</div>
+
+{% if media_assets %}
+  <div class="row g-3">
+    {% for media in media_assets %}
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="card h-100 shadow-sm">
+          {% if media.category == 'image' %}
+            <img src="{{ media.media_file.url }}" class="card-img-top" alt="{{ media.title }}">
+          {% elif media.category == 'video' %}
+            <div class="ratio ratio-16x9">
+              <video controls src="{{ media.media_file.url }}"></video>
+            </div>
+          {% else %}
+            <div class="p-4 text-center">
+              <i class="fas fa-file fa-3x mb-3"></i>
+              <p class="mb-0">{{ media.title }}</p>
+            </div>
+          {% endif %}
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ media.title|truncatechars:40 }}</h5>
+            <div class="mt-auto d-flex justify-content-between">
+              <a href="{% url 'media_assets:media_detail' media.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+              <div>
+                <a href="{% url 'media_assets:edit_media' media.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                <a href="{% url 'media_assets:delete_media' media.pk %}" class="btn btn-sm btn-danger">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="mt-4 d-flex justify-content-center">
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        {% if media_assets.has_previous %}
+          <li class="page-item"><a class="page-link" href="?page={{ media_assets.previous_page_number }}">Previous</a></li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Previous</span></li>
+        {% endif %}
+        <li class="page-item disabled"><span class="page-link">Page {{ media_assets.number }} of {{ media_assets.paginator.num_pages }}</span></li>
+        {% if media_assets.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ media_assets.next_page_number }}">Next</a></li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+{% else %}
+  <div class="alert alert-info">You haven't uploaded anything yet. <a href="{% url 'media_assets:upload_media' %}">Upload now</a>.</div>
+{% endif %}
+{% endblock %}

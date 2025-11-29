@@ -42,7 +42,8 @@ class UserLoginForm(AuthenticationForm):
     class Meta:
         model = User
         fields = ('username', 'password')
-
+    
+    
 
 # profile form : update on account profile
 class UserProfileForm(forms.ModelForm):

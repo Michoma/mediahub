@@ -1,7 +1,7 @@
 from django import forms
 from .models import MediaAsset
 
-class MediaAssetForm(forms,ModelForm):
+class MediaAssetForm(forms.ModelForm):
     class Meta:
         model = MediaAsset
         fields = ('title','description','category','media_file','is_public')

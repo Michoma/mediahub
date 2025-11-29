@@ -18,8 +18,10 @@ class User(AbstractUser):
     def __str__(self):
         return f"{self.username} - {self.email}"
     
+    @property
     def is_teacher(self):
-        return self.user_type =='teacher'
+        return self.user_type == 'teacher'
 
+    @property
     def is_student(self):
         return self.user_type == 'student'
