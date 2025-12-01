@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+
+    <h2 class="mb-3">My Profile</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        {% if user.profile_image %}
+            <div class="mb-3">
+                <p>Current Profile Photo:</p>
+                <img src="{{ user.profile_image.url }}" width="120" class="rounded">
+            </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+    </form>
+
+</div>
+{% endblock %}
