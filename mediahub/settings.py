@@ -50,27 +50,36 @@ LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'media_assets:dashboard'
 LOGOUT_REDIRECT_URL = 'accounts:login'
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 import cloudinary
 from decouple import config
+
+# Cloudinary configs (read after .env is loaded)
 CLOUDINARY_CONFIGS = {
-    'cloud_name' : config('CLOUDINARY_CLOUD_NAME', default=''),
-    'api_key' : config('CLOUDINARY_API_KEY', default=''),
-    'api_secret':config('CLOUDINARY_API_SECRET', default=''),
+    'cloud_name': config('CLOUDINARY_CLOUD_NAME', default=''),
+    'api_key': config('CLOUDINARY_API_KEY', default=''),
+    'api_secret': config('CLOUDINARY_API_SECRET', default=''),
 }
-if CLOUDINARY_CONFIGS['cloud_name'] :
+if CLOUDINARY_CONFIGS['cloud_name']:
     cloudinary.config(**CLOUDINARY_CONFIGS)
 
-import os
-from dotenv import load_dotenev
-load_dotenev()
 # environment configs for emails sending
-EMAIL_BACKEND=os.getenv("EMAIL_BACKEND")
-EMAIL_HOST=os.getenv("EMAIL_HOST")
-EMAIL_PORT=os.getenv("EMAIL_PORT")
-EMAIL_USE_TLS=os.getenv("EMAIL_USE_TLS")
-EMAIL_HOST_USER= os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD=os.getenv("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL=os.getenv("DEFAULT_FROM_EMAIL")
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = os.getenv("EMAIL_PORT")
+try:
+    EMAIL_PORT = int(EMAIL_PORT) if EMAIL_PORT else None
+except ValueError:
+    EMAIL_PORT = None
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")
+if isinstance(EMAIL_USE_TLS, str):
+    EMAIL_USE_TLS = EMAIL_USE_TLS.lower() in ("1", "true", "yes", "y")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
    
 
 MIDDLEWARE = [

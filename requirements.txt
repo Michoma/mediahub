@@ -2,3 +2,4 @@ pillow
 cloudinary
 django
 python-decouple
+python-dotenv
